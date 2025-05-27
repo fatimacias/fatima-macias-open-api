@@ -6,7 +6,20 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <h1>Open API Project</h1>
-    <script src="index.js"></script>
-  </body>
+  <h1>Marvel Explorer</h1>
+
+<div class="tabs">
+  <button id="show-characters" class="tab active">Characters</button>
+  <button id="show-comics" class="tab">Comics</button>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="search-input" placeholder="Search a superhero..." />
+  <input type="number" id="limit-input" placeholder="How many to show?" min="1" max="100" />
+  <button id="search-button">Search</button>
+</div>
+
+<div id="content" class="card-container"></div>
+  <script src="index.js"></script>
+</body>
 </html>
