@@ -1,0 +1,109 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  color: #e62429;
+  margin-bottom: 10px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  background: #ddd;
+  margin: 0 5px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 8px 8px 0 0;
+  transition: background 0.3s ease;
+}
+
+.tab:hover {
+  background: #bbb;
+}
+
+.tab.active {
+  background: #e62429;
+  color: white;
+  font-weight: bold;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+#search-input {
+  padding: 10px;
+  width: 250px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#search-button {
+  padding: 10px 15px;
+  margin-left: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #e62429;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+#search-button:hover {
+  background-color: #c21c20;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  width: 280px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  text-align: left;
+  padding: 0 0 15px 0;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ddd;
+}
+
+.card h3 {
+  margin: 15px;
+  font-size: 20px;
+  color: #333;
+}
+
+.card p {
+  margin: 0 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+#limit-input {
+  padding: 10px;
+  width: 150px;
+  margin-left: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
