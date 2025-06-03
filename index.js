@@ -20,8 +20,7 @@ function setActiveTab(tabId) {
     ? "Search a superhero..."
     : "Search a comic...";
   searchInput.value = "";
-  limitInput.value = "5";
-  
+  limitInput.value = "";
 }
 
 
@@ -52,7 +51,10 @@ function showCharacters(nameStartsWith = "") {
           <p>${char.description || "No description available."}</p>
         `;
         contentDiv.appendChild(card);
-      });
+        card.addEventListener('click', () => {
+          fetchMoreCharacterInfo(char.id);
+        });
+      });      
     })
     .catch(error => {
       contentDiv.innerHTML = "<p>Error loading characters.</p>";
@@ -86,6 +88,9 @@ function showComics(titleStartsWith = "") {
           <p>${comic.description || "No description available."}</p>
         `;
         contentDiv.appendChild(card);
+        card.addEventListener("click", () => {
+          fetchMoreComicInfo(comic.id);
+        });
       });
     })
     .catch(error => {
@@ -127,5 +132,118 @@ searchInput.addEventListener("keydown", function (event) {
   }
 });
 
+limitInput.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); 
+    searchButton.click();
+  }
+});
+
+
 setActiveTab("show-characters");
 showCharacters();
+
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modal-title");
+const modalDesc = document.getElementById("modal-description");
+const modalExtra = document.getElementById("modal-extra");
+const modalClose = document.getElementById("modal-close");
+const modalComics = document.getElementById("modal-comics");
+const modalSeries = document.getElementById("modal-series");
+const modalEvents = document.getElementById("modal-events");
+const modalStories = document.getElementById("modal-stories");
+const characterSections = document.getElementById("character-sections");
+const comicSections = document.getElementById("comic-sections");
+const modalComicEvents = document.getElementById("modal-comic-events");
+const modalPrices = document.getElementById("modal-prices");
+const modalCharacters = document.getElementById("modal-characters");
+
+function fetchMoreCharacterInfo(characterId) {
+  fetch(`https://gateway.marvel.com/v1/public/characters/${characterId}?ts=${ts}&apikey=${publicKey}&hash=${hash}`)
+    .then(res => res.json())
+    .then(data => {
+      const character = data.data.results[0];
+
+      modalTitle.textContent = character.name;
+      modalDesc.textContent = character.description || "No description available.";
+
+      const fillList = (el, items) => {
+        el.innerHTML = "";
+        if (items.length === 0) {
+          el.innerHTML = "<li>No items available.</li>";
+          return;
+        }
+        items.slice(0, 5).forEach(i => {
+          const li = document.createElement("li");
+          li.textContent = i.name;
+          el.appendChild(li);
+        });
+      };
+
+      fillList(modalComics, character.comics.items);
+      fillList(modalSeries, character.series.items);
+      fillList(modalEvents, character.events.items);
+      fillList(modalStories, character.stories.items);
+
+      // Show only character sections
+      characterSections.style.display = "block";
+      comicSections.style.display = "none";
+      modal.style.display = "block";
+    })
+    .catch(error => console.error("Error fetching character details:", error));
+}
+function fetchMoreComicInfo(comicId) {
+  fetch(`https://gateway.marvel.com/v1/public/comics/${comicId}?ts=${ts}&apikey=${publicKey}&hash=${hash}`)
+    .then(res => res.json())
+    .then(data => {
+      const comic = data.data.results[0];
+
+      modalTitle.textContent = comic.title;
+      modalDesc.textContent = comic.description || "No description available.";
+
+      const fillList = (el, items) => {
+        el.innerHTML = "";
+        if (!items || items.length === 0) {
+          el.innerHTML = "<li>No items available.</li>";
+          return;
+        }
+        items.forEach(i => {
+          const li = document.createElement("li");
+          li.textContent = i.name;
+          el.appendChild(li);
+        });
+      };
+
+      fillList(modalCharacters, comic.characters.items);
+      fillList(modalComicEvents, comic.events.items);
+
+      // Prices
+      modalPrices.innerHTML = "";
+      if (comic.prices && comic.prices.length > 0) {
+        comic.prices.forEach(p => {
+          const li = document.createElement("li");
+          li.textContent = `${p.type}: $${p.price.toFixed(2)}`;
+          modalPrices.appendChild(li);
+        });
+      } else {
+        modalPrices.innerHTML = "<li>No price info.</li>";
+      }
+
+      // Show only comic sections
+      comicSections.style.display = "block";
+      characterSections.style.display = "none";
+      modal.style.display = "block";
+    })
+    .catch(error => console.error("Error fetching comic details:", error));
+}
+
+
+modalClose.addEventListener("click", () => {
+  modal.style.display = "none";
+});
+
+window.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
